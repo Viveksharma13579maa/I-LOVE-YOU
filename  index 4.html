@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Manu, My Forever ♾️</title>
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<!-- GSAP -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<!-- Confetti -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+<style>
+  :root {
+    --primary: #ff4d8d;
+    --secondary: #b14dff;
+    --dark: #0f0a19;
+    --glass: rgba(255, 255, 255, 0.05);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  body {
+    background-color: var(--dark);
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* Background Glows */
+  .glow {
+    position: fixed;
+    width: 50vw; height: 50vw;
+    background: radial-gradient(circle, rgba(177,77,255,0.1) 0%, rgba(0,0,0,0) 70%);
+    border-radius: 50%;
+    z-index: -1;
+    filter: blur(60px);
+  }
+
+  section { min-height: 100vh; padding: 100px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
+
+  h1, h2 { font-family: 'Dancing Script', cursive; }
+
+  .hero-h1 {
+    font-size: clamp(3.5rem, 12vw, 8rem);
+    text-align: center;
+    background: linear-gradient(to right, #ff4d8d, #ff9ecd, #b14dff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 10px;
+  }
+
+  /* --- INFINITY LOGO STYLES --- */
+  .infinity-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+  }
+
+  .infinity-logo {
+    width: 180px;
+    filter: drop-shadow(0 0 15px var(--primary));
+    animation: heartbeat 2s infinite ease-in-out;
+  }
+
+  .infinity-path {
+    fill: none;
+    stroke: url(#grad);
+    stroke-width: 5;
+    stroke-linecap: round;
+    stroke-dasharray: 500;
+    stroke-dashoffset: 500;
+    animation: draw 4s forwards infinite alternate ease-in-out;
+  }
+
+  @keyframes heartbeat {
+    0%, 100% { transform: scale(1); filter: drop-shadow(0 0 15px var(--primary)); }
+    50% { transform: scale(1.1); filter: drop-shadow(0 0 30px var(--secondary)); }
+  }
+
+  @keyframes draw {
+    to { stroke-dashoffset: 0; }
+  }
+
+  .forever-text {
+    font-family: 'Dancing Script', cursive;
+    font-size: 2rem;
+    margin-top: 15px;
+    background: linear-gradient(45deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 2px;
+  }
+  /* --- END INFINITY STYLES --- */
+
+  /* Interactive Letter */
+  .envelope-wrapper {
+    position: relative; cursor: pointer; perspective: 1000px; margin: 50px 0;
+  }
+  .envelope {
+    width: 300px; height: 200px; background: #2a1b3d; position: relative;
+    border-radius: 0 0 10px 10px; box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+  }
+  .envelope::before {
+    content: ''; position: absolute; top: 0; z-index: 2;
+    border-left: 150px solid transparent; border-right: 150px solid transparent;
+    border-top: 110px solid #3d2a56; transform-origin: top; transition: 0.5s;
+  }
+  .envelope.open::before { transform: rotateX(180deg); z-index: 0; }
+  .letter {
+    position: absolute; bottom: 10px; left: 10px; right: 10px;
+    height: 180px; background: white; color: #333; padding: 20px;
+    border-radius: 5px; transition: 0.5s; z-index: 1; font-style: italic;
+  }
+  .envelope.open .letter { transform: translateY(-100px); height: 260px; z-index: 3; }
+
+  /* Gallery */
+  .gallery-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px; width: 100%; max-width: 1100px;
+  }
+  .photo-card {
+    background: white; padding: 15px 15px 45px 15px; transform: rotate(var(--r));
+    transition: 0.4s; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  }
+  .photo-card img { width: 100%; aspect-ratio: 1; object-fit: cover; }
+  .photo-card p { color: #333; font-family: 'Dancing Script'; font-size: 1.4rem; padding-top: 15px; text-align: center; }
+
+  /* Music Player */
+  .music-player {
+    position: fixed; bottom: 30px; right: 30px; z-index: 100;
+    background: rgba(0,0,0,0.6); backdrop-filter: blur(10px);
+    padding: 10px 20px; border-radius: 50px; display: flex; align-items: center; gap: 15px;
+    border: 1px solid var(--primary); cursor: pointer;
+  }
+
+  .floating-heart { position: fixed; pointer-events: none; z-index: 0; color: var(--primary); opacity: 0.6; }
+</style>
+</head>
+<body>
+
+<div class="glow" style="top: -10%; left: -10%;"></div>
+<div class="glow" style="bottom: -10%; right: -10%;"></div>
+
+<!-- Hero Section -->
+<section>
+  <h1 class="hero-h1">Manu Arora</h1>
+  
+  <!-- NEW INFINITY LOGO -->
+  <div class="infinity-wrapper">
+    <svg class="infinity-logo" viewBox="0 0 100 45">
+      <defs>
+        <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" style="stop-color:var(--primary);stop-opacity:1" />
+          <stop offset="100%" style="stop-color:var(--secondary);stop-opacity:1" />
+        </linearGradient>
+      </defs>
+      <path class="infinity-path" d="M31.3,37.3c-11.7,0-21.2-9.5-21.2-21.2c0-11.7,9.5-21.2,21.2-21.2c8.2,0,15.4,4.7,18.8,11.5c3.3-6.8,10.5-11.5,18.8-11.5c11.7,0,21.2,9.5,21.2,21.2c0,11.7-9.5,21.2-21.2,21.2c-8.2,0-15.4-4.7-18.8-11.5C46.7,32.6,39.5,37.3,31.3,37.3z"/>
+    </svg>
+    <p class="forever-text">Always & Forever</p>
+  </div>
+
+  <p style="margin-top: 40px; opacity: 0.6; font-size: 0.8rem; letter-spacing: 2px;">SCROLL FOR A SURPRISE</p>
+</section>
+
+<!-- Letter Section -->
+<section>
+  <h2 style="font-size: 2.5rem; margin-bottom: 30px;">To My Jaan...</h2>
+  <div class="envelope-wrapper" onclick="this.querySelector('.envelope').classList.toggle('open')">
+    <div class="envelope">
+      <div class="letter">
+        <strong>Dear Manu,</strong><br><br>
+        They say time is measured in seconds, but I measure it in the moments I spend with you. 
+        As long as this symbol exists, my love for you will exist. 
+        You are my infinity.<br><br>
+        Yours Always, <br>
+        [Your Name] ❤️
+      </div>
+    </div>
+  </div>
+  <p style="opacity: 0.5; font-size: 0.8rem;">(Tap to open the letter)</p>
+</section>
+
+<!-- Gallery -->
+<section>
+  <h2 style="font-size: 3rem; margin-bottom: 60px; color: var(--secondary);">Our Memories</h2>
+  <div class="gallery-grid" id="galleryGrid"></div>
+</section>
+
+<section style="text-align: center;">
+  <button id="finalTouch" style="padding: 15px 40px; border-radius: 50px; border: none; background: linear-gradient(45deg, var(--primary), var(--secondary)); color: white; font-weight: bold; cursor: pointer; box-shadow: 0 10px 30px rgba(177,77,255,0.4);">SEND EXTRA LOVE! 💖</button>
+</section>
+
+<!-- Music -->
+<div class="music-player" id="musicPlayer">
+  <span>♫ Play Music</span>
+  <audio id="song" loop src="https://www.bensound.com/bensound-music/bensound-love.mp3"></audio>
+</div>
+
+<script>
+  // 1. Populate Gallery
+  const captions = ["My Favourite Person", "Pure Love", "That Smile!", "Always Yours", "Together Forever", "My Heart"];
+  const grid = document.getElementById('galleryGrid');
+  for(let i=0; i<6; i++) {
+    const div = document.createElement('div');
+    div.className = 'photo-card';
+    div.style.setProperty('--r', `${(Math.random() * 8) - 4}deg`);
+    div.innerHTML = `<img src="https://picsum.photos/seed/${i+123}/400/400" alt="Us"><p>${captions[i]}</p>`;
+    grid.appendChild(div);
+  }
+
+  // 2. Music Toggle
+  const song = document.getElementById('song');
+  const player = document.getElementById('musicPlayer');
+  let playing = false;
+  player.addEventListener('click', () => {
+    if(!playing) { song.play(); player.querySelector('span').innerText = "⏸ Pause"; }
+    else { song.pause(); player.querySelector('span').innerText = "♫ Play Music"; }
+    playing = !playing;
+  });
+
+  // 3. GSAP Reveals
+  gsap.registerPlugin(ScrollTrigger);
+  gsap.from(".hero-h1", { opacity: 0, y: 50, duration: 1, ease: "power3.out" });
+  gsap.from(".infinity-wrapper", { opacity: 0, scale: 0, duration: 1.5, delay: 0.5, ease: "back.out(1.7)" });
+
+  gsap.utils.toArray('.photo-card').forEach(card => {
+    gsap.from(card, {
+      scrollTrigger: { trigger: card, start: "top 90%" },
+      opacity: 0, scale: 0.8, y: 30, duration: 0.8
+    });
+  });
+
+  // 4. Confetti
+  document.getElementById('finalTouch').addEventListener('click', () => {
+    confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#ff4d8d', '#b14dff'] });
+  });
+
+  // 5. Floating Hearts
+  function createHeart() {
+    const heart = document.createElement('div');
+    heart.innerHTML = ['❤️','💖','💗','✨'][Math.floor(Math.random()*4)];
+    heart.className = 'floating-heart';
+    heart.style.left = Math.random() * 100 + 'vw';
+    heart.style.top = '100vh';
+    heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+    document.body.appendChild(heart);
+    gsap.to(heart, {
+      y: -window.innerHeight - 100, x: (Math.random() - 0.5) * 200,
+      opacity: 0, duration: 6 + Math.random() * 4, onComplete: () => heart.remove()
+    });
+  }
+  setInterval(createHeart, 500);
+</script>
+
+</body>
+</html>
